@@ -1,6 +1,43 @@
-@Shope.Api_HostAddress = http://localhost:5234
+@Shope.Api_HostAddress = https://localhost:7061
+@customerId=3f8b0c0a-209e-4085-8963-2c764e5a2c13
+@orderId=3f2504e0-4f89-11d3-9a0c-0305e82c3301
+@productId=b2d6f6e1-6e39-46a2-b274-4d24b4d4f065
 
-GET {{Shope.Api_HostAddress}}/weatherforecast/
+GET {{Shope.Api_HostAddress}}/customers
 Accept: application/json
+
+###
+
+GET {{Shope.Api_HostAddress}}/products
+Accept: application/json
+
+###
+
+GET {{Shope.Api_HostAddress}}/orders
+Accept: application/json
+
+###
+
+POST {{Shope.Api_HostAddress}}/orders
+Content-Type: application/json
+
+{
+  "customerId": "{{customerId}}"
+}
+
+###
+
+GET {{Shope.Api_HostAddress}}/orders/{{orderId}}
+Accept: application/json
+
+###
+
+POST {{Shope.Api_HostAddress}}/orders/{{orderId}}/items
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "quantity": 2
+}
 
 ###

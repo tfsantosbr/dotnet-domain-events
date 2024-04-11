@@ -8,6 +8,8 @@ public class Order
     {
         Id = id ?? Guid.NewGuid();
         CustomerId = customerId;
+        CreatedAt = DateTime.UtcNow;
+        Status = OrderStatus.Created;
     }
 
     private Order()
@@ -16,31 +18,39 @@ public class Order
     
     public Guid Id { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public Guid CustomerId { get; private set; }
+    public Guid CustomerId { get; set; }
     public Customer Customer { get; private set; } = null!;
-    public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
+    public List<OrderItem> Items { get; set; } = [];
+    public OrderStatus Status { get; set; }
+    public bool IsConfirmed => Status == OrderStatus.Confirmed;
 
     public void AddItem(Guid productId, int quantity)
     {
         var item = new OrderItem(productId, quantity);
 
-        _items.Add(item);
+        Items.Add(item);
     }
 
     public void RemoveItem(Guid itemId)
     {
-        var item = _items.FirstOrDefault(x => x.Id == itemId);
+        var item = Items.FirstOrDefault(x => x.Id == itemId);
 
         if (item is null)
         {
             throw new Exception("Item not found");
         }
 
-        _items.Remove(item);
+        Items.Remove(item);
     }
 
-    public void ClearItems()
+    public void Confirm()
     {
-        _items.Clear();
+        Status = OrderStatus.Confirmed;
     }   
+}
+
+public enum OrderStatus
+{
+    Created,
+    Confirmed
 }

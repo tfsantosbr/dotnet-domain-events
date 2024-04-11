@@ -11,7 +11,7 @@ var configuration = builder.Configuration;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.Configure<JsonOptions>(options => 
+builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 // Add InMemoryDatabase
@@ -29,8 +29,12 @@ if (app.Environment.IsDevelopment())
 
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetService<ShopeeContext>()!;
-    context.Database.Migrate();
-    ShopeeContextSeed.Seed(context);
+
+    if (!context.Database.GetAppliedMigrations().Any())
+    {
+        context.Database.Migrate();
+        ShopeeContextSeed.Seed(context);
+    }
 }
 
 app.UseHttpsRedirection();

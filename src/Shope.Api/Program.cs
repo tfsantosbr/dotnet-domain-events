@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shope.Api.Requests;
-using Shope.Application.Base;
 using Shope.Application.Domains;
 using Shope.Infrastructure;
 using System.Text.Json.Serialization;
@@ -15,7 +14,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 // Add InMemoryDatabase
-builder.Services.AddDbContext<IShopeeContext, ShopeeContext>(options =>
+builder.Services.AddDbContext<ShopeeContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("Default"));
 });
@@ -29,38 +28,19 @@ if (app.Environment.IsDevelopment())
 
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetService<ShopeeContext>()!;
-
-    if (!context.Database.GetAppliedMigrations().Any())
-    {
-        context.Database.Migrate();
-        ShopeeContextSeed.Seed(context);
-    }
+    context.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
 
-// Products
-
-app.MapGet("/products", async (IShopeeContext context) =>
-{
-    return await context.Products.ToListAsync();
-});
-
-// Customers
-
-app.MapGet("/customers", async (IShopeeContext context) =>
-{
-    return await context.Customers.ToListAsync();
-});
-
 // Orders
 
-app.MapGet("/orders", async (IShopeeContext context) =>
+app.MapGet("/orders", async (ShopeeContext context) =>
 {
     return await context.Orders.ToListAsync();
 });
 
-app.MapPost("/orders", async (IShopeeContext context, CreateOrderRequest request) =>
+app.MapPost("/orders", async (ShopeeContext context, CreateOrderRequest request) =>
 {
     var order = new Order(request.CustomerId);
 
@@ -71,11 +51,10 @@ app.MapPost("/orders", async (IShopeeContext context, CreateOrderRequest request
     return Results.Created($"/orders/{order.Id}", order);
 });
 
-app.MapGet("/orders/{id}", async (IShopeeContext context, Guid id) =>
+app.MapGet("/orders/{id}", async (ShopeeContext context, Guid id) =>
 {
     var order = await context.Orders
         .AsNoTracking()
-        .Include(o => o.Customer)
         .Include(o => o.Items)
         .FirstOrDefaultAsync(o => o.Id == id);
 
@@ -85,8 +64,8 @@ app.MapGet("/orders/{id}", async (IShopeeContext context, Guid id) =>
 app.MapPost("/orders/{id}/items", async (ShopeeContext context, Guid id, CreateOrderItemRequest request) =>
 {
     var order = await context.Orders
-        .Include(o => o.Customer)
         .Include(o => o.Items)
+        .AsTracking()
         .FirstOrDefaultAsync(o => o.Id == id);
 
     if (order is null)
@@ -94,19 +73,14 @@ app.MapPost("/orders/{id}/items", async (ShopeeContext context, Guid id, CreateO
         return Results.NotFound();
     }
 
-    //var orderItem = new OrderItem(request.ProductId, request.Quantity);
-    order.AddItem(new Guid("a6a7a954-58a8-4b11-91f5-8f0edf6b5e4a"), 5);
-
-    //order.AddItem(request.ProductId, request.Quantity);
-
-    //context.Orders.Update(order);
+    order.AddItem(request.ProductId, request.Quantity);
 
     await context.SaveChangesAsync();
 
     return Results.NoContent();
 });
 
-app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid id, Guid itemId) =>
+app.MapDelete("/orders/{id}/items/{itemId}", async (ShopeeContext context, Guid id, Guid itemId) =>
 {
     var order = await context.Orders
         .Include(o => o.Items)
@@ -125,7 +99,7 @@ app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid
 });
 
 
-app.MapPut("/orders/{id}/confirmation", async (IShopeeContext context, Guid id) =>
+app.MapPut("/orders/{id}/confirmation", async (ShopeeContext context, Guid id) =>
 {
     var order = await context.Orders
         .Include(o => o.Items)

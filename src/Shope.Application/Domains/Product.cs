@@ -4,7 +4,7 @@ public class Product
 {
     public Product(string name, decimal price, int stock, Guid? id = null)
     {
-        Id = id ?? Guid.NewGuid();
+        Id = id ?? default;
         Name = name;
         Price = price;
         Stock = stock;

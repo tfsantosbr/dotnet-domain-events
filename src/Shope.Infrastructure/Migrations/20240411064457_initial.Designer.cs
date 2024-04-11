@@ -12,8 +12,8 @@ using Shope.Infrastructure;
 namespace Shope.Infrastructure.Migrations
 {
     [DbContext(typeof(ShopeeContext))]
-    [Migration("20240411052746_Initial")]
-    partial class Initial
+    [Migration("20240411064457_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

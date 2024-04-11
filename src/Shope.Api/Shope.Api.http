@@ -1,24 +1,25 @@
-@Shope.Api_HostAddress = https://localhost:7061
+@hostAddress = https://localhost:7061
 @customerId=3f8b0c0a-209e-4085-8963-2c764e5a2c13
 @orderId=3f2504e0-4f89-11d3-9a0c-0305e82c3301
+@orderItemId=94c7b0e4-33bf-4d10-9993-5d81b23807c6
 @productId=b2d6f6e1-6e39-46a2-b274-4d24b4d4f065
 
-GET {{Shope.Api_HostAddress}}/customers
+GET {{hostAddress}}/customers
 Accept: application/json
 
 ###
 
-GET {{Shope.Api_HostAddress}}/products
+GET {{hostAddress}}/products
 Accept: application/json
 
 ###
 
-GET {{Shope.Api_HostAddress}}/orders
+GET {{hostAddress}}/orders
 Accept: application/json
 
 ###
 
-POST {{Shope.Api_HostAddress}}/orders
+POST {{hostAddress}}/orders
 Content-Type: application/json
 
 {
@@ -27,17 +28,27 @@ Content-Type: application/json
 
 ###
 
-GET {{Shope.Api_HostAddress}}/orders/{{orderId}}
+GET {{hostAddress}}/orders/{{orderId}}
 Accept: application/json
 
 ###
 
-POST {{Shope.Api_HostAddress}}/orders/{{orderId}}/items
+POST {{hostAddress}}/orders/{{orderId}}/items
 Content-Type: application/json
 
 {
   "productId": "{{productId}}",
   "quantity": 2
 }
+
+###
+
+DELETE {{hostAddress}}/orders/{{orderId}}/items/{{orderItemId}}
+Accept: application/json
+
+###
+
+PUT {{hostAddress}}/orders/{{orderId}}/confirmation
+Accept: application/json
 
 ###

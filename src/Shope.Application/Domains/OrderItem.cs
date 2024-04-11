@@ -4,7 +4,7 @@ public class OrderItem
 {
     public OrderItem(Guid productId, int quantity, Guid? id = null)
     {
-        Id = id ?? Guid.NewGuid();
+        Id = id ?? default;
         ProductId = productId;
         Quantity = quantity;
     }

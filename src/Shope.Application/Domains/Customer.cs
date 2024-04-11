@@ -4,7 +4,7 @@ public class Customer
 {
     public Customer(string name, string email, Guid? id = null)
     {
-        Id = id ?? Guid.NewGuid();
+        Id = id ?? default;
         Name = name;
         Email = email;
     }

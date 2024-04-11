@@ -6,7 +6,7 @@ public class Order
 
     public Order(Guid customerId, Guid? id = null)
     {
-        Id = id ?? Guid.NewGuid();
+        Id = id ?? default;
         CustomerId = customerId;
         CreatedAt = DateTime.UtcNow;
         Status = OrderStatus.Created;
@@ -18,9 +18,9 @@ public class Order
     
     public Guid Id { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public Guid CustomerId { get; set; }
+    public Guid CustomerId { get; private set; }
     public Customer Customer { get; private set; } = null!;
-    public List<OrderItem> Items { get; set; } = [];
+    public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
     public OrderStatus Status { get; set; }
     public bool IsConfirmed => Status == OrderStatus.Confirmed;
 
@@ -28,7 +28,7 @@ public class Order
     {
         var item = new OrderItem(productId, quantity);
 
-        Items.Add(item);
+        _items.Add(item);
     }
 
     public void RemoveItem(Guid itemId)
@@ -40,7 +40,7 @@ public class Order
             throw new Exception("Item not found");
         }
 
-        Items.Remove(item);
+        _items.Remove(item);
     }
 
     public void Confirm()

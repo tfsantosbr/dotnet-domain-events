@@ -24,11 +24,13 @@ public class Order
     public OrderStatus Status { get; set; }
     public bool IsConfirmed => Status == OrderStatus.Confirmed;
 
-    public void AddItem(Guid productId, int quantity)
+    public OrderItem AddItem(Guid productId, int quantity)
     {
         var item = new OrderItem(productId, quantity);
 
         _items.Add(item);
+
+        return item;
     }
 
     public void RemoveItem(Guid itemId)

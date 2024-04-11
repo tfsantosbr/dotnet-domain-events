@@ -14,11 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-// Add InMemoryDatabase
 builder.Services.AddDbContext<IShopeeContext, ShopeeContext>(options =>
-{
-    options.UseNpgsql(configuration.GetConnectionString("Default"));
-});
+    options.UseInMemoryDatabase("ShopeeDatabase")
+);
 
 var app = builder.Build();
 
@@ -29,12 +27,7 @@ if (app.Environment.IsDevelopment())
 
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetService<ShopeeContext>()!;
-
-    if (!context.Database.GetAppliedMigrations().Any())
-    {
-        context.Database.Migrate();
-        ShopeeContextSeed.Seed(context);
-    }
+    ShopeeContextSeed.Seed(context);
 }
 
 app.UseHttpsRedirection();
@@ -82,7 +75,7 @@ app.MapGet("/orders/{id}", async (IShopeeContext context, Guid id) =>
     return order is null ? Results.NotFound() : Results.Ok(order);
 });
 
-app.MapPost("/orders/{id}/items", async (ShopeeContext context, Guid id, CreateOrderItemRequest request) =>
+app.MapPost("/orders/{id}/items", async (IShopeeContext context, Guid id, CreateOrderItemRequest request) =>
 {
     var order = await context.Orders
         .Include(o => o.Customer)
@@ -90,20 +83,13 @@ app.MapPost("/orders/{id}/items", async (ShopeeContext context, Guid id, CreateO
         .FirstOrDefaultAsync(o => o.Id == id);
 
     if (order is null)
-    {
         return Results.NotFound();
-    }
 
-    //var orderItem = new OrderItem(request.ProductId, request.Quantity);
-    order.AddItem(new Guid("a6a7a954-58a8-4b11-91f5-8f0edf6b5e4a"), 5);
-
-    //order.AddItem(request.ProductId, request.Quantity);
-
-    //context.Orders.Update(order);
+    var item = order.AddItem(request.ProductId, request.Quantity);
 
     await context.SaveChangesAsync();
 
-    return Results.NoContent();
+    return Results.Created($"/orders/{item.Id}", item);
 });
 
 app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid id, Guid itemId) =>
@@ -113,9 +99,7 @@ app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid
         .FirstOrDefaultAsync(o => o.Id == id);
 
     if (order is null)
-    {
         return Results.NotFound();
-    }
 
     order.RemoveItem(itemId);
 
@@ -124,7 +108,6 @@ app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid
     return Results.NoContent();
 });
 
-
 app.MapPut("/orders/{id}/confirmation", async (IShopeeContext context, Guid id) =>
 {
     var order = await context.Orders
@@ -132,14 +115,10 @@ app.MapPut("/orders/{id}/confirmation", async (IShopeeContext context, Guid id) 
         .FirstOrDefaultAsync(o => o.Id == id);
 
     if (order is null)
-    {
         return Results.NotFound();
-    }
 
     if (order.IsConfirmed)
-    {
         return Results.BadRequest("Order already confirmed");
-    }
 
     order.Confirm();
 

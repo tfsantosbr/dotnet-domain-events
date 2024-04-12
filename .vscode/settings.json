@@ -1,0 +1,11 @@
+{
+    "rest-client.environmentVariables": {
+        "$shared": {
+            "host": "https://localhost:7061"
+        },
+        "local": {},
+        "production": {
+            "host": "https://awesome.api.com"
+        }
+    }
+}

@@ -11,7 +11,7 @@ public abstract class AggregateRoot
         _domainEvents.Add(domainEvent);
     }
 
-    protected void ClearEvents()
+    public void ClearEvents()
     {
         _domainEvents.Clear();
     }

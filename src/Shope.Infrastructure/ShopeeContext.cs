@@ -1,19 +1,44 @@
 ﻿
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shope.Application.Base.Database;
+using Shope.Application.Base.Domain;
 using Shope.Application.Domains;
 
 namespace Shope.Infrastructure;
 
-public class ShopeeContext : DbContext, IShopeeContext
+public class ShopeeContext(DbContextOptions<ShopeeContext> options, IPublisher publisher) 
+    : DbContext(options), IShopeeContext
 {
-    public ShopeeContext(DbContextOptions<ShopeeContext> options) : base(options)
-    {
-    }
-
     public DbSet<Order> Orders { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        await PublishDomainEvents(cancellationToken);
+
+        return result;
+    }
+
+    private async Task PublishDomainEvents(CancellationToken cancellationToken)
+    {
+        var domainEvents = ChangeTracker.Entries<AggregateRoot>()
+            .Select(e=>e.Entity)
+            .Where(e => e.DomainEvents.Count != 0)
+            .SelectMany(e => 
+            {
+                var events = e.DomainEvents;
+                e.ClearEvents();
+                return events;
+            })
+            .ToList();
+
+        foreach (var domainEvent in domainEvents)
+            await publisher.Publish(domainEvent, cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -11,4 +11,8 @@ Criar um cadastro de Pedidos
 
 ## References
 
-- [Eventos de Domínio | DDD do jeito certo | Parte 07](https://www.youtube.com/watch?v=_By3QRBMHSo&t=575s)
+- [Eventos de Domínio | DDD do jeito certo | Parte 07](https://www.youtube.com/watch?v=_By3QRBMHSo)
+- [How to Use the Domain Event Pattern](https://www.youtube.com/watch?v=BimfDeDV4yU)
+- [Using Domain Events To Build A Decoupled System The Scales](https://www.youtube.com/watch?v=AHzWJ_SMqLo)
+- [Don't Make This Common Domain Events Mistake](https://www.youtube.com/watch?v=5L2BUuSdZBI)
+- [Transactional Outbox Pattern](https://www.youtube.com/watch?v=XALvnX7MPeo)

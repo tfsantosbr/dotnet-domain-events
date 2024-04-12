@@ -19,7 +19,7 @@ public class OrderItemAddedEventHandler(IShopeeContext context, ILogger<OrderIte
             p.Id == productId, cancellationToken);
 
         if (product is null)
-            throw new Exception($"Product with id {productId} not found");
+            throw new Exception($"Product with id '{productId}' not found");
         
         var actualStock = product.Stock;
 
@@ -31,8 +31,8 @@ public class OrderItemAddedEventHandler(IShopeeContext context, ILogger<OrderIte
 
         logger.LogInformation(
             """
-            The stock of product with id {productId} has been 
-            decreased from {actualStock} to {newStock}
+            The stock of product with id '{productId}' has been 
+            decreased from '{actualStock}' to '{newStock}'
             """,
             productId, actualStock, newStock
             );

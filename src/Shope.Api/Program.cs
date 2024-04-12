@@ -116,6 +116,7 @@ app.MapDelete("/orders/{id}/items/{itemId}", async (IShopeeContext context, Guid
 app.MapPut("/orders/{id}/confirmation", async (IShopeeContext context, Guid id) =>
 {
     var order = await context.Orders
+        .Include(o => o.Customer)
         .Include(o => o.Items)
         .FirstOrDefaultAsync(o => o.Id == id);
 

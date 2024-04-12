@@ -9,7 +9,7 @@ public class NotificationService(ILogger<NotificationService> logger)
     public async Task SendNotificationAsync(string email, string subject, string message)
     {
         logger.LogInformation(
-            "Sending notification to {email} with subject {subject} and message {message}", 
+            "Sending notification to '{email}' with subject '{subject}' and message '{message}'", 
             email, subject, message
             );
 

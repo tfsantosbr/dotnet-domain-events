@@ -30,7 +30,7 @@ public class ShopeeContext(DbContextOptions<ShopeeContext> options, IPublisher p
             .Where(e => e.DomainEvents.Count != 0)
             .SelectMany(e => 
             {
-                var events = e.DomainEvents;
+                var events = e.DomainEvents.ToList();
                 e.ClearEvents();
                 return events;
             })

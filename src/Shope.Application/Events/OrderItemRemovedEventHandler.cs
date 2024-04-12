@@ -11,8 +11,9 @@ public class OrderItemRemovedEventHandler(IShopeeContext context, ILogger<OrderI
     public async Task Handle(OrderItemRemovedEvent notification, CancellationToken cancellationToken)
     {
         // Get product and increase his stock
-        var productId = notification.RemovedOrderItem.ProductId;
-        var quantityToIncrease = notification.RemovedOrderItem.Quantity;
+
+        var productId = notification.ProductId;
+        var quantityToIncrease = notification.ProductQuantity;
 
         var product = await context.Products.FirstOrDefaultAsync(p => 
             p.Id == productId, cancellationToken);
@@ -29,7 +30,10 @@ public class OrderItemRemovedEventHandler(IShopeeContext context, ILogger<OrderI
         await context.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
-            "Product with id {productId} has been increased from {actualStock} to {newStock}",
+            """
+            The stock of product with id {productId} has been 
+            increased from {actualStock} to {newStock}
+            """,
             productId, actualStock, newStock
             );
     }

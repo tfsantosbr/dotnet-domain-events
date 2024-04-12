@@ -38,7 +38,7 @@ Content-Type: application/json
 
 {
   "productId": "{{productId}}",
-  "quantity": 2
+  "quantity": 10
 }
 
 ###

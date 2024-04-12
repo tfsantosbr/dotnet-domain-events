@@ -11,14 +11,14 @@ public class OrderConfirmedEventHandler(INotificationService notificationService
         // Send a notification to customer
         // that the order has been confirmed
         
-        var customerEmail = notification.Order.Customer.Email;
-        var customerName = notification.Order.Customer.Name;
-        var orderId = notification.Order.Id;
+        var customerEmail = notification.CustomerEmail;
+        var customerName = notification.CustomerName;
+        var orderId = notification.OrderId;
         
         await notificationService.SendNotificationAsync(
             customerEmail,
             "Order Confirmed",
-            $"Dear, {customerName}. Your order with id {orderId} has been confirmed."
+            $"Dear, {customerName}. Your order with id '{orderId}' has been confirmed."
             );
     }
 }

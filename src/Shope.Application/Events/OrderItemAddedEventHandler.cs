@@ -12,8 +12,8 @@ public class OrderItemAddedEventHandler(IShopeeContext context, ILogger<OrderIte
     {
         // Get product and decress his stock
         
-        var productId = notification.AddedOrdemItem.ProductId;
-        var quantityToDecrease = notification.AddedOrdemItem.Quantity;
+        var productId = notification.ProductId;
+        var quantityToDecrease = notification.ProductQuantity;
 
         var product = await context.Products.FirstOrDefaultAsync(p => 
             p.Id == productId, cancellationToken);
@@ -21,17 +21,20 @@ public class OrderItemAddedEventHandler(IShopeeContext context, ILogger<OrderIte
         if (product is null)
             throw new Exception($"Product with id {productId} not found");
         
-        var ActualStock = product.Stock;
+        var actualStock = product.Stock;
 
         product.DecreaseStock(quantityToDecrease);
 
-        var NewStock = product.Stock;
+        var newStock = product.Stock;
 
         await context.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
-            "Product with id {productId} has been decreased from {ActualStock} to {NewStock}",
-            productId, ActualStock, NewStock
+            """
+            The stock of product with id {productId} has been 
+            decreased from {actualStock} to {newStock}
+            """,
+            productId, actualStock, newStock
             );
     }
 }

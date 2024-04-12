@@ -1,14 +1,9 @@
 using Shope.Application.Base.Domain;
-using Shope.Application.Domains;
 
 namespace Shope.Application.Events;
 
-public record OrderItemRemovedEvent : DomainEvent
-{
-    public OrderItemRemovedEvent(OrderItem removedOrderItem)
-    {
-        RemovedOrderItem = removedOrderItem;
-    }
-
-    public OrderItem RemovedOrderItem { get; private set; }
-}
+public record OrderItemRemovedEvent(
+    Guid OrderItemId,
+    Guid OrderId,
+    Guid ProductId,
+    int ProductQuantity) : DomainEvent;

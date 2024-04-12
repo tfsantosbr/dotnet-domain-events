@@ -33,7 +33,11 @@ public class Order : AggregateRoot
 
         _items.Add(orderItem);
 
-        RaiseEvent(new OrderItemAddedEvent(orderItem));
+        RaiseEvent(new OrderItemAddedEvent(
+            OrderItemId: orderItem.Id, 
+            OrderId: orderItem.OrderId, 
+            ProductId: orderItem.ProductId, 
+            ProductQuantity: orderItem.Quantity));
 
         return orderItem;
     }
@@ -49,14 +53,23 @@ public class Order : AggregateRoot
 
         _items.Remove(orderItem);
 
-        RaiseEvent(new OrderItemRemovedEvent(orderItem));
+        RaiseEvent(new OrderItemRemovedEvent(
+            OrderItemId: orderItem.Id, 
+            OrderId: orderItem.OrderId, 
+            ProductId: orderItem.ProductId, 
+            ProductQuantity: orderItem.Quantity));
     }
 
     public void Confirm()
     {
         Status = OrderStatus.Confirmed;
 
-        RaiseEvent(new OrderConfirmedEvent(this));
+        RaiseEvent(new OrderConfirmedEvent(
+            OrderId: Id,
+            CustomerId: Customer.Id, 
+            CustomerName: Customer.Name, 
+            CustomerEmail: Customer.Email,
+            OrderStatus: Status));
     }   
 }
 

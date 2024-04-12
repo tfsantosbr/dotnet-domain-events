@@ -3,12 +3,8 @@ using Shope.Application.Domains;
 
 namespace Shope.Application.Events;
 
-public record OrderItemAddedEvent : DomainEvent
-{
-    public OrderItemAddedEvent(OrderItem addedOrdemItem)
-    {
-        AddedOrdemItem = addedOrdemItem;
-    }
-
-    public OrderItem AddedOrdemItem { get; private set; }
-}
+public record OrderItemAddedEvent(
+    Guid OrderItemId,
+    Guid OrderId,
+    Guid ProductId,
+    int ProductQuantity) : DomainEvent;

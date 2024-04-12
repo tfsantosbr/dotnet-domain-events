@@ -1,6 +1,5 @@
 using System.Text;
 using MediatR;
-using Shope.Application.Base.Notifications;
 using Shope.Application.Base.Reports;
 
 namespace Shope.Application.Events;

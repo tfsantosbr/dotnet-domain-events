@@ -1,21 +1,24 @@
 @customerId=3f8b0c0a-209e-4085-8963-2c764e5a2c13
 @orderId=3f2504e0-4f89-11d3-9a0c-0305e82c3301
-@orderItemId=d0f5123d-6001-4998-be3b-ce685161504d
 @productId=b2d6f6e1-6e39-46a2-b274-4d24b4d4f065
 
 ### 1. Get all customers
+# @name getCustomers
 GET {{host}}/customers
 Accept: application/json
 
-### 2. Get a customer by id
+### 2. Get producs
+# @name getProducts
 GET {{host}}/products
 Accept: application/json
 
 ### 3. Get all products
+# @name getOrders
 GET {{host}}/orders
 Accept: application/json
 
 ### 4. Get an order by id
+# @name getOrderById
 POST {{host}}/orders
 Content-Type: application/json
 
@@ -24,10 +27,12 @@ Content-Type: application/json
 }
 
 ### 5. Create an order
+# @name createOrder
 GET {{host}}/orders/{{orderId}}
 Accept: application/json
 
 ### 6. Add item to an order
+# @name addItemToOrder
 POST {{host}}/orders/{{orderId}}/items
 Content-Type: application/json
 
@@ -37,9 +42,12 @@ Content-Type: application/json
 }
 
 ### 7. Get an item from an order
+# @name getItemFromOrder
+@orderItemId = {{addItemToOrder.response.body.$.id}}
 DELETE {{host}}/orders/{{orderId}}/items/{{orderItemId}}
 Accept: application/json
 
 ### 8. Confirm an order
+# @name confirmOrder
 PUT {{host}}/orders/{{orderId}}/confirmation
 Accept: application/json

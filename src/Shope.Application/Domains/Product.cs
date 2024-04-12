@@ -1,6 +1,8 @@
-﻿namespace Shope.Application.Domains;
+﻿using Shope.Application.Base.Domain;
 
-public class Product
+namespace Shope.Application.Domains;
+
+public class Product : AggregateRoot
 {
     public Product(string name, decimal price, int stock, Guid? id = null)
     {

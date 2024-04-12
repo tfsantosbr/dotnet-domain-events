@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Shope.Application.Base;
+using Shope.Application.Base.Database;
 using Shope.Application.Domains;
 
 namespace Shope.Infrastructure;

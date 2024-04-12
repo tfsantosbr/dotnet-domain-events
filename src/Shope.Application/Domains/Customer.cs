@@ -1,6 +1,8 @@
-﻿namespace Shope.Application.Domains;
+﻿using Shope.Application.Base.Domain;
 
-public class Customer
+namespace Shope.Application.Domains;
+
+public class Customer : AggregateRoot
 {
     public Customer(string name, string email, Guid? id = null)
     {

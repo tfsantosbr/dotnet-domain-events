@@ -1,6 +1,9 @@
+using Shope.Application.Base.Domain;
+using Shope.Application.Events;
+
 namespace Shope.Application.Domains;
 
-public class Order
+public class Order : AggregateRoot
 {
     private readonly List<OrderItem> _items = [];
 
@@ -26,28 +29,34 @@ public class Order
 
     public OrderItem AddItem(Guid productId, int quantity)
     {
-        var item = new OrderItem(productId, quantity);
+        var orderItem = new OrderItem(productId, quantity);
 
-        _items.Add(item);
+        _items.Add(orderItem);
 
-        return item;
+        RaiseEvent(new OrderItemAddedEvent(orderItem));
+
+        return orderItem;
     }
 
     public void RemoveItem(Guid itemId)
     {
-        var item = Items.FirstOrDefault(x => x.Id == itemId);
+        var orderItem = Items.FirstOrDefault(x => x.Id == itemId);
 
-        if (item is null)
+        if (orderItem is null)
         {
             throw new Exception("Item not found");
         }
 
-        _items.Remove(item);
+        _items.Remove(orderItem);
+
+        RaiseEvent(new OrderItemRemovedEvent(orderItem));
     }
 
     public void Confirm()
     {
         Status = OrderStatus.Confirmed;
+
+        RaiseEvent(new OrderConfirmedEvent(this));
     }   
 }
 

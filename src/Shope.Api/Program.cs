@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Shope.Api.Requests;
-using Shope.Application.Base;
+using Shope.Application.Base.Database;
+using Shope.Application.Base.Notifications;
 using Shope.Application.Domains;
 using Shope.Infrastructure;
+using Shope.Infrastructure.Notifications;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,7 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services.AddDbContext<IShopeeContext, ShopeeContext>(options =>
     options.UseInMemoryDatabase("ShopeeDatabase")
 );
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

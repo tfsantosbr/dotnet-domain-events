@@ -3,7 +3,7 @@ using Shope.Application.Base.Notifications;
 
 namespace Shope.Application.Events;
 
-public class OrderConfirmedEventHandler(INotificationService notificationService) 
+public class OrderConfirmedNotificationEventHandler(INotificationService notificationService) 
     : INotificationHandler<OrderConfirmedEvent>
 {
     public async Task Handle(OrderConfirmedEvent notification, CancellationToken cancellationToken)

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Shope.Api.Requests;
 using Shope.Application.Base.Database;
 using Shope.Application.Base.Notifications;
+using Shope.Application.Base.Reports;
 using Shope.Application.Domains;
 using Shope.Application.Events;
 using Shope.Infrastructure;
 using Shope.Infrastructure.Notifications;
+using Shope.Infrastructure.Reports;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,7 @@ builder.Services.AddDbContext<IShopeeContext, ShopeeContext>(options =>
     options.UseInMemoryDatabase("ShopeeDatabase")
 );
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<OrderConfirmedEvent>());
 
 var app = builder.Build();

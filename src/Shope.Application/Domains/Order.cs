@@ -18,7 +18,7 @@ public class Order : AggregateRoot
     private Order()
     {
     }
-    
+
     public Guid Id { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public Guid CustomerId { get; private set; }
@@ -34,9 +34,9 @@ public class Order : AggregateRoot
         _items.Add(orderItem);
 
         RaiseEvent(new OrderItemAddedEvent(
-            OrderItemId: orderItem.Id, 
-            OrderId: orderItem.OrderId, 
-            ProductId: orderItem.ProductId, 
+            OrderItemId: orderItem.Id,
+            OrderId: orderItem.OrderId,
+            ProductId: orderItem.ProductId,
             ProductQuantity: orderItem.Quantity));
 
         return orderItem;
@@ -54,9 +54,9 @@ public class Order : AggregateRoot
         _items.Remove(orderItem);
 
         RaiseEvent(new OrderItemRemovedEvent(
-            OrderItemId: orderItem.Id, 
-            OrderId: orderItem.OrderId, 
-            ProductId: orderItem.ProductId, 
+            OrderItemId: orderItem.Id,
+            OrderId: orderItem.OrderId,
+            ProductId: orderItem.ProductId,
             ProductQuantity: orderItem.Quantity));
     }
 
@@ -66,11 +66,13 @@ public class Order : AggregateRoot
 
         RaiseEvent(new OrderConfirmedEvent(
             OrderId: Id,
-            CustomerId: Customer.Id, 
-            CustomerName: Customer.Name, 
+            OrderCreatedAt: CreatedAt,
+            OrderItems: Items.Select(i => new OrderConfirmedEventItem(i.Id, i.ProductId, i.Quantity)),
+            CustomerId: Customer.Id,
+            CustomerName: Customer.Name,
             CustomerEmail: Customer.Email,
-            OrderStatus: Status));
-    }   
+            OrderStatus: (OrderConfirmedEventStatus)Status));
+    }
 }
 
 public enum OrderStatus

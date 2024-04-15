@@ -2,12 +2,10 @@
 
 ## Use Case
 
-```text
 Criar um cadastro de Pedidos
 - Toda vez que for adiciona um item de pedido, deve gerar um evento e descontar do estoque do produto
 - Toda vez que for remover um item de pedido, deve gerar um evento e aumentar o estoque do produto
 - Toda vez que o pedido sofrer uma mudança de Status, deve gerar um evento que irá enviar um e-mail ao usuário
-```
 
 ## References
 
@@ -16,3 +14,6 @@ Criar um cadastro de Pedidos
 - [Using Domain Events To Build A Decoupled System The Scales](https://www.youtube.com/watch?v=AHzWJ_SMqLo)
 - [Don't Make This Common Domain Events Mistake](https://www.youtube.com/watch?v=5L2BUuSdZBI)
 - [Transactional Outbox Pattern](https://www.youtube.com/watch?v=XALvnX7MPeo)
+- [Which Event Type Should You Publish in Event Driven Architecture?
+](https://www.youtube.com/watch?v=K806a-rWE2g)
+- [Should you publish Domain Events or Integration Events?](https://www.youtube.com/watch?v=53GsiAcKm9k)

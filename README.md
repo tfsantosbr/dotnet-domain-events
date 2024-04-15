@@ -17,3 +17,4 @@ Criar um cadastro de Pedidos
 - [Which Event Type Should You Publish in Event Driven Architecture?
 ](https://www.youtube.com/watch?v=K806a-rWE2g)
 - [Should you publish Domain Events or Integration Events?](https://www.youtube.com/watch?v=53GsiAcKm9k)
+- [May The Power of DOMAIN EVENTS Be With You!](https://www.youtube.com/watch?v=LHz0sDKagx0)
